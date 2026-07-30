@@ -1005,13 +1005,10 @@ persen=100;
 
 }
 
-// Untuk mencapai 75%, target dianggap tetap, sehingga:
-// (total + x) / target = 0.75
-// sehingga x = 0.75 * target - total
-// Tambahkan buffer +2 agar angka tampil lebih aman dan tidak terlalu tipis.
-let needed75Raw=Math.max(Math.floor(0.75 * target - total),0);
-let needed75=needed75Raw + 2;
-let needed100=Math.max(Math.floor(target - total),0);
+// Untuk mencapai 75%, hitung kebutuhan submit dari target tetap.
+// Kalau persentase sudah 75% atau lebih, kebutuhan 75% di-set 0.
+let needed75 = persen >= 75 ? 0 : Math.max(Math.floor(0.75 * target - total), 0);
+let needed100 = Math.max(Math.floor(target - total), 0);
 
 const remainingEl=document.getElementById("remainingSubmit");
 
