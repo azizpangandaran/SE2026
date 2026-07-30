@@ -681,9 +681,9 @@ Print
 
 <div class="box">
 
-<label>Target</label>
+<label>Open</label>
 
-<input type="number" id="target" value="0">
+<input type="number" id="open" value="0">
 
 </div>
 
@@ -881,8 +881,8 @@ function animateProgressBar(targetPercent){
 
 function hitung(){
 
-let target=
-Number(document.getElementById("target").value)||0;
+let open=
+Number(document.getElementById("open").value)||0;
 
 let approve=
 Number(document.getElementById("approve").value)||0;
@@ -895,6 +895,8 @@ Number(document.getElementById("reject").value)||0;
 
 //====================
 
+let target=open+submit+approve;
+
 let total=
 approve+
 submit-
@@ -905,11 +907,6 @@ if(total<0){
 total=0;
 
 }
-
-let open=
-target-total;
-
-if(open<0) open=0;
 
 let persen=0;
 
@@ -973,7 +970,7 @@ document.getElementById("resetBtn")
 
 .addEventListener("click",()=>{
 
-document.getElementById("target").value=0;
+document.getElementById("open").value=0;
 
 document.getElementById("approve").value=0;
 
