@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SE2026</title>
+<title>Monitoring Progress Pendataan SE2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1005,8 +1005,11 @@ persen=100;
 
 }
 
-let needed75=Math.max(3*open+4*reject-approve-submit,0);
-let needed100=Math.max(target-total,0);
+// Untuk mencapai 75%, target dianggap tetap, sehingga:
+// (total + x) / target = 0.75
+// sehingga x = 0.75 * target - total
+let needed75=Math.max(Math.floor(0.75 * target - total),0);
+let needed100=Math.max(Math.floor(target - total),0);
 
 const remainingEl=document.getElementById("remainingSubmit");
 
