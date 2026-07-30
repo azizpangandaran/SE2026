@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Monitoring Progress Pendataan SE2026</title>
+<title>SE2026</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -328,6 +328,48 @@ font-weight:600;
 
 text-align:center;
 border:1px solid var(--border);
+
+}
+
+.target-summary{
+
+margin-top:8px;
+
+padding:10px 12px;
+
+border-radius:12px;
+
+background:linear-gradient(135deg,var(--surface-alt) 0%,var(--surface-soft) 100%);
+
+border:1px solid var(--border);
+
+text-align:center;
+
+}
+
+.target-label{
+
+font-size:11px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+color:var(--muted);
+
+margin-bottom:2px;
+
+}
+
+.target-value{
+
+font-size:24px;
+
+font-weight:700;
+
+color:var(--primary);
 
 }
 
@@ -702,7 +744,7 @@ CONTENT GRID
 
 <div class="progress-track" id="progressTrack">
 
-<div class="progress-fill" id="fill"></div>
+<div class="progress-fill" id="fill" data-percent="0"></div>
 
 </div>
 
@@ -710,7 +752,15 @@ CONTENT GRID
 
 <div class="hint" id="remainingSubmit">
 
-Butuh 0 submit lagi untuk mencapai 100%
+Semangat, butuh 0 submit untuk mencapai 75% dan 0 submit untuk mencapai 100%
+
+</div>
+
+<div class="target-summary">
+
+<div class="target-label">Target</div>
+
+<div class="target-value" id="cTarget">0</div>
 
 </div>
 
@@ -724,13 +774,6 @@ Reset
 
 </button>
 
-<button class="btn btn-light" onclick="window.print()">
-
-<i class="fa-solid fa-print"></i>
-
-Print
-
-</button>
 
 </div>
 
@@ -775,62 +818,6 @@ Print
 </div>
 
 </div>
-
-</div>
-
-</div>
-
-<!-- =======================
-CARD
-======================= -->
-
-<div class="dashboard">
-
-<div class="card orange">
-
-<h4>TARGET</h4>
-
-<h2 id="cTarget">0</h2>
-
-</div>
-
-<div class="card yellow">
-
-<h4>SUBMIT</h4>
-
-<h2 id="cSubmit">0</h2>
-
-</div>
-
-<div class="card green">
-
-<h4>APPROVE</h4>
-
-<h2 id="cApprove">0</h2>
-
-</div>
-
-<div class="card red">
-
-<h4>REJECT</h4>
-
-<h2 id="cReject">0</h2>
-
-</div>
-
-<div class="card blue">
-
-<h4>TOTAL</h4>
-
-<h2 id="cTotal">0</h2>
-
-</div>
-
-<div class="card purple">
-
-<h4>OPEN</h4>
-
-<h2 id="cOpen">0</h2>
 
 </div>
 
@@ -893,6 +880,10 @@ function animateValue(id,endValue){
 
     const obj=document.getElementById(id);
 
+    if(!obj){
+        return;
+    }
+
     let start=Number(obj.innerText.replace(/,/g,""))||0;
     let duration=220;
     let startTime=null;
@@ -932,8 +923,13 @@ function animateValue(id,endValue){
 function animateProgressBar(targetPercent){
 
     const fill=document.getElementById("fill");
+
+    if(!fill){
+        return;
+    }
+
     const startPercent=Number(fill.dataset.percent)||0;
-    const duration=300;
+    const duration=400;
     const startTime=performance.now();
 
     function easeOutCubic(t){
@@ -946,13 +942,13 @@ function animateProgressBar(targetPercent){
         const eased=easeOutCubic(progress);
         const value=startPercent+(targetPercent-startPercent)*eased;
 
-        fill.style.width=value+"%";
+        fill.style.width=value.toFixed(2)+"%";
         fill.dataset.percent=value;
 
         if(progress<1){
             requestAnimationFrame(step);
         }else{
-            fill.style.width=targetPercent+"%";
+            fill.style.width=targetPercent.toFixed(2)+"%";
             fill.dataset.percent=targetPercent;
         }
 
@@ -1009,14 +1005,12 @@ persen=100;
 
 }
 
-let neededSubmit=Math.max(target-total,0);
+let needed75=Math.max(3*open+4*reject-approve-submit,0);
+let needed100=Math.max(target-total,0);
 
 const remainingEl=document.getElementById("remainingSubmit");
 
-remainingEl.innerHTML=
-neededSubmit>0
-?`Butuh <strong>${neededSubmit.toLocaleString("id-ID")}</strong> submit lagi untuk mencapai 100%`
-:"Sudah mencapai 100%";
+remainingEl.innerHTML=`Semangat, butuh <strong>${needed75.toLocaleString("id-ID")}</strong> submit untuk mencapai 75% dan <strong>${needed100.toLocaleString("id-ID")}</strong> submit untuk mencapai 100%`;
 
 //====================
 // Card
