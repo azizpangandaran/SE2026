@@ -613,7 +613,25 @@ align-items:center;
 
 justify-content:center;
 
-transition:.8s;
+transition:transform .45s cubic-bezier(.22,1,.36,1), box-shadow .45s ease, filter .45s ease;
+
+transform:scale(.96);
+
+filter:saturate(1);
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+position:relative;
+
+}
+
+.circle.active{
+
+transform:scale(1.05);
+
+box-shadow:0 0 0 12px rgba(67,160,71,.12),0 22px 40px rgba(0,91,172,.22);
+
+filter:saturate(1.12);
 
 }
 
@@ -998,6 +1016,48 @@ function animateValue(id,endValue){
 }
 
 //==============================
+// Animasi Lingkaran
+//==============================
+
+function animateCircle(targetPercent){
+
+    const circle=document.getElementById("circle");
+    const startPercent=Number(circle.dataset.percent)||0;
+    const duration=900;
+    const startTime=performance.now();
+
+    function easeOutCubic(t){
+        return 1-Math.pow(1-t,3);
+    }
+
+    function step(currentTime){
+
+        const progress=Math.min((currentTime-startTime)/duration,1);
+        const eased=easeOutCubic(progress);
+        const value=startPercent+(targetPercent-startPercent)*eased;
+
+        circle.style.background=`conic-gradient(#43A047 ${value*3.6}deg, #d8e4ef ${value*3.6}deg)`;
+        circle.dataset.percent=value;
+
+        circle.classList.remove("active");
+        void circle.offsetWidth;
+        circle.classList.add("active");
+
+        if(progress<1){
+            requestAnimationFrame(step);
+        }else{
+            circle.style.background=`conic-gradient(#43A047 ${targetPercent*3.6}deg, #d8e4ef ${targetPercent*3.6}deg)`;
+            circle.dataset.percent=targetPercent;
+            circle.classList.remove("active");
+        }
+
+    }
+
+    requestAnimationFrame(step);
+
+}
+
+//==============================
 // Hitung
 //==============================
 
@@ -1093,12 +1153,7 @@ persen+"%";
 // Circle
 //====================
 
-document.getElementById("circle").style.background=
-
-`conic-gradient(
-#43A047 ${persen*3.6}deg,
-#d8e4ef ${persen*3.6}deg
-)`;
+animateCircle(persen);
 
 }
 
